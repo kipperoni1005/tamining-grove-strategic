@@ -85,6 +85,8 @@ create table if not exists sales (
 );
 
 -- Helpful view: receivables
+drop view if exists v_receivables;
+
 create or replace view v_receivables as
 select
   s.id,
