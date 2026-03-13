@@ -102,7 +102,8 @@ select
   coalesce(s.expected_payment_date, s.sale_date + (s.payment_terms_days || ' days')::interval) as expected_payment_date_calc
 from sales s;
 
--- RLS - Updated policies to use auth.uid() IS NOT NULL instead of true
+-- RLS - Simple policies for single-tenant farm app
+-- All authenticated users have full access to all data (they're all on the same farm)
 alter table settings enable row level security;
 alter table fields enable row level security;
 alter table varieties enable row level security;
@@ -113,43 +114,43 @@ alter table sales enable row level security;
 
 -- SETTINGS
 create policy "auth read settings" on settings for select to authenticated using (true);
-create policy "auth write settings" on settings for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update settings" on settings for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
+create policy "auth write settings" on settings for insert to authenticated with check (true);
+create policy "auth update settings" on settings for update to authenticated using (true) with check (true);
 
 -- FIELDS
 create policy "auth read fields" on fields for select to authenticated using (true);
-create policy "auth write fields" on fields for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update fields" on fields for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete fields" on fields for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write fields" on fields for insert to authenticated with check (true);
+create policy "auth update fields" on fields for update to authenticated using (true) with check (true);
+create policy "auth delete fields" on fields for delete to authenticated using (true);
 
 -- VARIETIES
 create policy "auth read varieties" on varieties for select to authenticated using (true);
-create policy "auth write varieties" on varieties for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update varieties" on varieties for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete varieties" on varieties for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write varieties" on varieties for insert to authenticated with check (true);
+create policy "auth update varieties" on varieties for update to authenticated using (true) with check (true);
+create policy "auth delete varieties" on varieties for delete to authenticated using (true);
 
 -- STORES
 create policy "auth read stores" on stores for select to authenticated using (true);
-create policy "auth write stores" on stores for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update stores" on stores for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete stores" on stores for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write stores" on stores for insert to authenticated with check (true);
+create policy "auth update stores" on stores for update to authenticated using (true) with check (true);
+create policy "auth delete stores" on stores for delete to authenticated using (true);
 
 -- FIELD COST ENTRIES
 create policy "auth read costs" on field_cost_entries for select to authenticated using (true);
-create policy "auth write costs" on field_cost_entries for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update costs" on field_cost_entries for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete costs" on field_cost_entries for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write costs" on field_cost_entries for insert to authenticated with check (true);
+create policy "auth update costs" on field_cost_entries for update to authenticated using (true) with check (true);
+create policy "auth delete costs" on field_cost_entries for delete to authenticated using (true);
 
 -- BATCHES
 create policy "auth read batches" on batches for select to authenticated using (true);
-create policy "auth write batches" on batches for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update batches" on batches for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete batches" on batches for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write batches" on batches for insert to authenticated with check (true);
+create policy "auth update batches" on batches for update to authenticated using (true) with check (true);
+create policy "auth delete batches" on batches for delete to authenticated using (true);
 
 -- SALES
 create policy "auth read sales" on sales for select to authenticated using (true);
-create policy "auth write sales" on sales for insert to authenticated with check (auth.uid() IS NOT NULL);
-create policy "auth update sales" on sales for update to authenticated using (auth.uid() IS NOT NULL) with check (auth.uid() IS NOT NULL);
-create policy "auth delete sales" on sales for delete to authenticated using (auth.uid() IS NOT NULL);
+create policy "auth write sales" on sales for insert to authenticated with check (true);
+create policy "auth update sales" on sales for update to authenticated using (true) with check (true);
+create policy "auth delete sales" on sales for delete to authenticated using (true);
 
 -- Allow authenticated to read receivables view (views use underlying table perms; keep policies above)
